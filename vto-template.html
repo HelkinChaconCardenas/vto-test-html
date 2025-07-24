@@ -6,44 +6,42 @@
     <title>VTO</title>
     <script src="https://dsf-cdn.loreal.io/dropper.js" type="application/javascript" defer=""></script>
     <script>
-        function vtoAdd2Cart(payload) {
-            location.href = "vto_add2cart://" + encodeURIComponent(JSON.stringify(payload));
-        }
-    </script>
-    <script>
         document.addEventListener("DOMContentLoaded", function () {
-            console.log("[VTO] DOMContentLoaded");
             const urlParams = new URLSearchParams(window.location.search);
             const upc = urlParams.get("upc");
-            console.log("[VTO] UPC desde URL:", upc);
+            console.log("[VTO] UPC leído desde query param:", upc);
 
-            const dsfApp = document.querySelector('dsf-app');
-            if (dsfApp) {
-                if (upc) {
-                    dsfApp.setAttribute('vto_upc_list', upc);
-                    dsfApp.setAttribute('vto_selected_upc', upc);
-                    console.log("[VTO] Atributos asignados:", {
-                        vto_upc_list: dsfApp.getAttribute('vto_upc_list'),
-                        vto_selected_upc: dsfApp.getAttribute('vto_selected_upc')
-                    });
-                } else {
-                    console.warn("[VTO] No se encontró el parámetro 'upc' en la URL.");
-                }
-            } else {
-                console.error("[VTO] No se encontró el elemento <dsf-app> en el DOM.");
+            if (!upc) {
+                console.warn("[VTO] No se proporcionó ningún UPC");
+                return;
             }
 
+            const dsfApp = document.createElement("dsf-app");
+            dsfApp.setAttribute("type", "std");
+            dsfApp.setAttribute("tenant", "modiface");
+            dsfApp.setAttribute("application", "vto");
+            dsfApp.setAttribute("touchpoint", "web");
+            dsfApp.setAttribute("customer", "farmashop");
+            dsfApp.setAttribute("country", "ury-es");
+            dsfApp.setAttribute("environment", "production");
+            dsfApp.setAttribute("vto_type", "sp");
+            dsfApp.setAttribute("vto_category", "make-up");
+            dsfApp.setAttribute("vto_upc_list", upc);
+            dsfApp.setAttribute("vto_selected_upc", upc);
+            dsfApp.setAttribute("style", "width:100vw;height:100vh;display:block");
+
+            document.body.appendChild(dsfApp);
+            console.log("[VTO] <dsf-app> creado dinámicamente con UPC:", upc);
+
             const tryAttachCloseHandler = () => {
-                const closeBtn = document
-                    .querySelector('dsf-app')?.shadowRoot
-                    ?.querySelector('button.close-button');
+                const closeBtn = dsfApp?.shadowRoot?.querySelector('button.close-button');
 
                 if (closeBtn && !closeBtn.hasAttribute('data-close-handler')) {
                     closeBtn.setAttribute('data-close-handler', 'attached');
                     closeBtn.addEventListener('click', () => {
                         location.href = 'vto_close://true';
                     });
-                    console.log("[VTO] Handler de cierre conectado al botón.");
+                    console.log("[VTO] Handler de cierre adjuntado.");
                 } else {
                     setTimeout(tryAttachCloseHandler, 300);
                 }
@@ -57,19 +55,6 @@
     </style>
 </head>
 <body>
-<dsf-app
-        type="std"
-        tenant="modiface"
-        application="vto"
-        touchpoint="web"
-        customer="farmashop"
-        country="ury-es"
-        environment="production"
-        vto_type="sp"
-        vto_category="make-up"
-        vto_upc_list=""
-        vto_selected_upc=""
-        style="width:100vw;height:100vh;display:block"
-/>
+<!-- ya no va dsf-app aquí -->
 </body>
 </html>
