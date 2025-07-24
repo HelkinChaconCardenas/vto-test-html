@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>VTO</title>
+    <script src="https://dsf-cdn.loreal.io/dropper.js" type="application/javascript" defer=""></script>
+    <script>
+        function vtoAdd2Cart(payload) {
+            location.href = "vto_add2cart://" + encodeURIComponent(JSON.stringify(payload));
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tryAttachCloseHandler = () => {
+                const closeBtn = document
+                    .querySelector('dsf-app')?.shadowRoot
+                    ?.querySelector('button.close-button');
+
+                if (closeBtn && !closeBtn.hasAttribute('data-close-handler')) {
+                    closeBtn.setAttribute('data-close-handler', 'attached');
+                    closeBtn.addEventListener('click', () => {
+                        location.href = 'vto_close://true';
+                    });
+                } else {
+                    setTimeout(tryAttachCloseHandler, 300);
+                }
+            };
+            tryAttachCloseHandler();
+        });
+    </script>
+
+    <style>
+        html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+    </style>
+</head>
+<body>
+<dsf-app
+        type="std"
+        tenant="modiface"
+        application="vto"
+        touchpoint="web"
+        customer="farmashop"
+        country="ury-es"
+        environment="production"
+        vto_type="sp"
+        vto_category="make-up"
+        vto_upc_list="{{upc}}"
+        vto_selected_upc="{{upc}}"
+        style="width:100vw;height:100vh;display:block"
+/>
+</body>
+</html>
