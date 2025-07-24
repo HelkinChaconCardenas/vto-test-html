@@ -12,13 +12,25 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            console.log("[VTO] DOMContentLoaded");
             const urlParams = new URLSearchParams(window.location.search);
             const upc = urlParams.get("upc");
+            console.log("[VTO] UPC desde URL:", upc);
 
             const dsfApp = document.querySelector('dsf-app');
-            if (dsfApp && upc) {
-                dsfApp.setAttribute('vto_upc_list', upc);
-                dsfApp.setAttribute('vto_selected_upc', upc);
+            if (dsfApp) {
+                if (upc) {
+                    dsfApp.setAttribute('vto_upc_list', upc);
+                    dsfApp.setAttribute('vto_selected_upc', upc);
+                    console.log("[VTO] Atributos asignados:", {
+                        vto_upc_list: dsfApp.getAttribute('vto_upc_list'),
+                        vto_selected_upc: dsfApp.getAttribute('vto_selected_upc')
+                    });
+                } else {
+                    console.warn("[VTO] No se encontró el parámetro 'upc' en la URL.");
+                }
+            } else {
+                console.error("[VTO] No se encontró el elemento <dsf-app> en el DOM.");
             }
 
             const tryAttachCloseHandler = () => {
@@ -31,6 +43,7 @@
                     closeBtn.addEventListener('click', () => {
                         location.href = 'vto_close://true';
                     });
+                    console.log("[VTO] Handler de cierre conectado al botón.");
                 } else {
                     setTimeout(tryAttachCloseHandler, 300);
                 }
