@@ -4,47 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>VTO</title>
-
-    <!-- Este script corre antes de que el plugin se cargue -->
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const upc = urlParams.get("upc");
-        console.log("[VTO] UPC ASD leído desde query param:", upc);
-
-        // Creamos globalmente para usar luego
-        window.VTO_UPC = upc;
-    </script>
-
-    <!-- Plugin del VTO -->
-    <script src="https://dsf-cdn.loreal.io/dropper.js" type="application/javascript" defer></script>
-
+    <script src="https://dsf-cdn.loreal.io/dropper.js" type="application/javascript" defer=""></script>
     <script>
         function vtoAdd2Cart(payload) {
             location.href = "vto_add2cart://" + encodeURIComponent(JSON.stringify(payload));
         }
-
+    </script>
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const upc = window.VTO_UPC;
-
-            const dsfApp = document.querySelector("dsf-app");
-
-            if (!upc) {
-                console.warn("[VTO] No se proporcionó ningún UPC");
-                return;
-            }
-
-            dsfApp.setAttribute("vto_upc_list", upc);
-            dsfApp.setAttribute("vto_selected_upc", upc);
-            console.log("[VTO] UPC seteado en <dsf-app>:", upc);
-
             const tryAttachCloseHandler = () => {
-                const closeBtn = dsfApp?.shadowRoot?.querySelector("button.close-button");
-                if (closeBtn && !closeBtn.hasAttribute("data-close-handler")) {
-                    closeBtn.setAttribute("data-close-handler", "attached");
-                    closeBtn.addEventListener("click", () => {
-                        location.href = "vto_close://true";
+                const closeBtn = document
+                    .querySelector('dsf-app')?.shadowRoot
+                    ?.querySelector('button.close-button');
+
+                if (closeBtn && !closeBtn.hasAttribute('data-close-handler')) {
+                    closeBtn.setAttribute('data-close-handler', 'attached');
+                    closeBtn.addEventListener('click', () => {
+                        location.href = 'vto_close://true';
                     });
-                    console.log("[VTO] Handler de cierre adjuntado.");
                 } else {
                     setTimeout(tryAttachCloseHandler, 300);
                 }
@@ -58,7 +35,6 @@
     </style>
 </head>
 <body>
-<!-- Componente ya en el HTML, con valores vacíos iniciales -->
 <dsf-app
         type="std"
         tenant="modiface"
@@ -69,8 +45,8 @@
         environment="production"
         vto_type="sp"
         vto_category="make-up"
-        vto_upc_list=""
-        vto_selected_upc=""
+        vto_upc_list="295387"
+        vto_selected_upc="295387"
         style="width:100vw;height:100vh;display:block"
 />
 </body>
