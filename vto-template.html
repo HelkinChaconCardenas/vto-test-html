@@ -12,6 +12,15 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const upc = urlParams.get("upc");
+
+            const dsfApp = document.querySelector('dsf-app');
+            if (dsfApp && upc) {
+                dsfApp.setAttribute('vto_upc_list', upc);
+                dsfApp.setAttribute('vto_selected_upc', upc);
+            }
+
             const tryAttachCloseHandler = () => {
                 const closeBtn = document
                     .querySelector('dsf-app')?.shadowRoot
@@ -45,8 +54,8 @@
         environment="production"
         vto_type="sp"
         vto_category="make-up"
-        vto_upc_list="{{upc}}"
-        vto_selected_upc="{{upc}}"
+        vto_upc_list=""
+        vto_selected_upc=""
         style="width:100vw;height:100vh;display:block"
 />
 </body>
